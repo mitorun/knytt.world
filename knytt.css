@@ -1,0 +1,804 @@
+/* Экспериментальная страница Knytt Stories fan site
+https://mitorun.studio/exp/knytt/ и https://mitorun.studio/en/exp/knytt/ */
+
+@font-face {
+	font-weight: 100 900;
+	font-family: 'Jost';
+	font-style: normal;
+	src: url('/fls/jost-100-900-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-weight: 100 900;
+	font-family: 'Jost';
+	font-style: normal;
+	src: url('/fls/jost-100-900-cyrillic.woff2') format('woff2');
+	unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+:root {
+	--font-family: 'Jost', 'IBM Plex Sans', 'Roboto', sans-serif;/* font-family для обычного текста */
+	--font-family-heading: 'Yanone Kaffeesatz', 'Roboto Slab', 'Cormorant Garamond', serif;/* font-family для заголовков */
+	--font-family-mono: monospace;/* font-family для моноширинного шрифта (код и т.п.) */
+	--font-size-xl: 23px;
+	--font-size-l: 20px;
+	--font-size-m: 17px;
+	--font-size-s: 15px;
+	--font-size-xs: 13px;
+	--line-height-m: 1.5;/* базовый текст body */
+	--line-height-s: 1.35;/* поплотней текст, заголовки h2-h4 */
+	--line-height-xs: 1.2;/* плотный текст, заголовок h1 */
+	--container-padding: 14px;/* это боковые паддинги для мобилки (или 14px, или 19px) */
+
+	--color: hsl(0, 0%, 0%);/* базовый "чёрный" цвет для шрифтов и элементов */
+	--bg: hsl(0, 0%, 100%);/* это для фона разных областей */
+	--grey-dark: hsl(0, 0%, 37%);/* используется для темно-серого шрифта в .font-14 и т.п. */
+	--grey: hsl(0, 0%, 50%);/* средний серый цвет для маловажных шрифтов и элементов */
+	--grey-medium: hsl(0, 0%, 65%);/* серый цвет для рамок таблиц */
+	--grey-light: hsl(0, 0%, 78%);
+	--grey-lightest: hsl(0, 0%, 92%);/* очень светлый серый цвет, для фона областей text-field и т.п. */
+	--grey-transparent: hsla(0, 0%, 0%, 0.6);/* полупрозрачный серый для серого текста */
+	--color-main-light: hsl(152, 72%, 88%);/* это светло-бирюзовый */
+	--color-main: hsl(152, 65%, 76%);/* это бирюзовый, главный цвет страницы knytt */
+	--color-main-dark: hsl(152, 60%, 37%);/* это темно-бирюзовый */
+}/* Это CSS-переменные: .h1 {color: var(--color);} */
+
+@media (min-width: 576px) {
+	:root {
+		--container-padding: 40px;
+	}
+}
+
+@media (min-width: 1024px) {
+	:root {
+		--color: hsl(0, 0%, 18%);
+		/*--bg: rgb(250,249,248);*/
+	}/* это чтобы снизить контраст на больших экранах */
+}
+
+*,
+::after,
+::before {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	/*font-size: 100%; это вариант из reset.css */
+	/*font: inherit; это вариант из reset.css */
+	/*vertical-align: baseline; это вариант из reset.css */
+	/*border: 0; это вариант из reset.css */
+}
+
+::selection {
+	color: hsl(0, 0%, 100%);
+	background: var(--color-main-dark);/* или rgb(106, 25, 160) */
+}/* это стилизация текста при выделении */
+
+::-webkit-scrollbar {
+	/*display: none; или width: 0; height: 0; это чтобы убрать-удалить скроллбар */
+	width: 10px;/* по умолчанию 17px (Windows, Chrome) */
+	height: 10px;
+	/*background-color: transparent; или background: hsl(113, 39%, 94%); */
+	border: 1px solid var(--color-main);/* было hsl(0, 0%, 84%) */
+	border-radius: 50px;
+}/* это весь элемент скроллбара */
+
+body::-webkit-scrollbar {
+	width: 20px;
+}
+
+/*::-webkit-scrollbar-track {
+	background: transparent;
+} это настройка для всей полосы, но я задаю эти настройки самому скроллбару */
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--color-main);
+	/*border: 2px solid hsl(120, 39%, 94%); это создаёт эффект что ползунок меньше ширины всего скроллбара и находится как бы в нем */
+	border-radius: 50px;
+	/*box-shadow: inset 0 0 1px 1px hsl(113, 52%, 71%); */
+}/* это ползунок скроллбара */
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-main-light); /* было hsl(113, 61%, 71%); */
+}
+
+html {
+	background: url('/img/exp/knytt/Gradient0.png') 0%/48px fixed;/* это задаёт фон VOID из кусочка фона 24x24px, было 72px, было rgb(170,170,170) */
+	image-rendering: pixelated;/* убирает сглаживание растровых картинок при масштабировании, делая чёткие пиксельные картинки */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;/* это для плавного скролла по якорям, только если в браузере не стоит предпочтения убирать анимации */
+	}
+}
+
+body {
+	min-height: 100vh;
+	/*overflow: hidden; это надо для профилактики?! */
+	font: 400 var(--font-size-m, 17px)/var(--line-height-m, 1.5) var(--font-family);
+	color: var(--color);
+	background: hsla(0, 0%, 40%, 0.3);/* или rgba(128,128,128,.4) это фильтр для фона html */
+}
+
+a,
+button,
+input,
+textarea,
+summary,
+select,
+svg {
+	font: inherit;
+	color: inherit;
+	touch-action: manipulation;/* это убирает задержку 300мс после клика на мобилке */
+}/* сюда нужно собрать все интерактивные теги-элементы, на которые можно нажимать и у которых настройки текста не наследуются */
+
+a:not([class]) {
+	color: hsl(213, 85%, 28%);
+}
+
+a:not([class]):visited {
+	color: hsl(250, 23%, 45%);
+}
+
+a[class],
+a:not([class]):hover/*a[class]:hover,a[class]:visited*/ {
+	text-decoration: none;
+}
+
+img {
+	display: block;/* это избавляет от пустой строки под картинкой, равной line-height. У этого способа есть минус когда нам не нужно чтобы картинка была блочной. Ещё один способ - это задать родителю картинки display: flex; */
+	max-width: 100%;/* или width: 100%; */
+	height: auto;/* или max-height: 100%; нужна ли эта строка? */
+	object-fit: contain;
+	image-rendering: pixelated;/* убирает сглаживание растровых картинок при масштабировании, делая чёткие пиксельные картинки */
+	/*content-visibility: auto; это чтобы браузер не тратил ресурсы на картинку, пока не получит её (полностью?) */
+}
+
+/* Ниже даны стандартные настройки для заголовков сайта. Если на страницах нужно получить другие размеры заголовка, то надо помнить о возможности применять конструкции типа <h1 class="h3"> */
+
+h1 {
+	/*max-width: 330px;*/
+	font: 700 37px/1.3 var(--font-family-heading);
+	letter-spacing: 0.07em;/* это ради шрифта Yanone+Kaffeesatz */
+}
+
+@media (min-width: 1024px) {
+	h1 {
+		max-width: 100%;
+		font-size: 52px;/* было 46 */
+	}
+}
+
+h2 {
+	margin: 0 0 38px;
+	font: 700 37px/1.3 var(--font-family-heading);
+	letter-spacing: 0.07em;
+	text-align: center;/* это ради шрифта Yanone+Kaffeesatz */
+	/*color: rgb(60,60,60); */
+}
+
+@media (min-width: 1024px) {
+	h2 {
+		font-size: 44px;
+	}
+}
+
+h3 {
+	margin: 46px 0 22px;
+	font: 700 27px/1.3 var(--font-family-heading);
+	letter-spacing: 0.06em;/* это ради шрифта Yanone+Kaffeesatz */
+	/*color: rgb(60,60,60); */
+}
+
+@media (min-width: 1024px) {
+	h3 {
+		font-size: 29px;
+	}
+}
+
+/*.h4 {
+	margin: 22px 0 11px;
+	font: 700 22px/1.3 var(--font-family-heading);
+}*/
+
+/* Ниже описаны размеры (и иногда цвет) для базового текста. Если на сайте надо будет увеличить большинство размеров базового текста, то проще будет тут изменить размер (чем менять все классы в HTML), например .font-18 {font-size: 20px;} */
+
+.font-xs {
+	font-size: var(--font-size-xs);/* было 16px; */
+}
+
+.font-sg {
+	font-size: var(--font-size-s);
+	color: var(--grey-transparent);/* было 18px; */
+}
+
+ul:not(.list),
+ol:not(.list) {
+	list-style: none;
+}
+
+.list {
+	margin: 1em 0;
+	padding: 0 0 0 24px;/* думаю лучше не задавать отступ в em, иначе будут криво равняться li с разными размерами шрифтов */
+}/* это класс для стандартного вида списков ul/ol */
+
+.list li {
+	margin-bottom: 0.5em;
+}
+
+.list li::marker {
+	/*font-size: 90%;*/
+	/*font-weight: bold;*/
+	color: var(--color-main);
+}
+
+/*ol.list li::marker {
+	content:"[" counter(list-item)"] ";
+	color: hsla(0, 0%, 0%, 0.5);
+}*/
+
+/*dt,
+dd {
+	display: inline-block;
+	margin: 0 0 .5em;
+}*/
+
+/*p {
+	margin: 1em 0 0.5em;
+} */
+
+/* Дополнительные строки, использовать по надобности: */
+/*::-webkit-scrollbar {width: 0; height: 0;}  это для визуального скрытия всех скроллбаров */
+/*::selection {color: rgb(255,255,255); background-color: var(--color-main-deep);}  это стилизация текста при выделении */
+/*html {scroll-behavior: smooth;}  это для плавного перехода по ссылкам-якорям */
+/**, *::before, *::after {box-sizing: border-box;}  делает размеры всех боксов включая паддинги и рамки, сейчас эту настройку прописал только к body. Или так: *,::after,::before {box-sizing: border-box} */
+/*body::-webkit-scrollbar {width: 0;}  это скрывает скроллбар только у body? */
+/*nav, footer, header, aside {display: block;} */
+/*button {cursor: pointer;} */
+/*:focus, :active {outline: none;} */
+/*a:focus, a:active {outline: none;}  у этой строки есть нужда, если записать верхнюю? */
+/*a:not([class]) {color: inherit;}  сейчас эту настройку записал в правило выше. Без этого ссылки без класса красятся синим цветом (по умолчанию для ссылок в браузере) */
+/*body {text-rendering: optimizeSpeed; scroll-behavior: smooth;}  ускорение текста и плавность перехода к якорям */
+/*textarea {display: block;}  это убирает отступ-строку внизу элемента */
+
+.container {
+	max-width: calc(1000px + 2 * var(--container-padding, 14px));/* было 480px или 1236px или 1300px */
+	margin-right: auto;
+	margin-left: auto;
+	padding-right: var(--container-padding, 14px);
+	padding-left: var(--container-padding, 14px);
+	background: var(--bg);
+	box-shadow: 0 3px 13px 2px hsla(0, 0%, 0%, 0.2);
+
+	/*background: content-box hsla(39, 100%, 50%, 0.05);
+	outline: 2px dashed hsla(39, 100%, 50%, 0.4); это для тестирования */
+}/* это делает ширину контентной части 1200px на десктопах, в мобилке паддинги 15px по бокам делают необходимые отступы от края */
+
+.header {
+	margin-bottom: 45px;
+	padding-bottom: 10px;
+	font-family: var(--font-family-heading);
+	letter-spacing: 0.07em;/* это ради шрифта Yanone+Kaffeesatz */
+	/* background: var(--grey-lightest); */
+}
+
+.header-bg {
+	position: relative;
+	/*display: flex;
+	justify-content: space-between;*/
+	height: 160px;
+	margin-right: calc(-1 * var(--container-padding));
+	margin-left: calc(-1 * var(--container-padding));
+	padding: 14px var(--container-padding);
+	text-shadow: 0 0.2em 0.6em hsla(9, 63%, 6%, 0.4);
+	color: var(--color-main-light);
+	background: url('/img/exp/knytt/knytt-header.png') 0 72%/cover no-repeat hsl(8, 36%, 20%);/* это для позиционирования логотипа *//* было 148px *//* #a6f0ce */
+	/*background: url('/img/exp/knytt/knytt-header.png') 0 72%/cover no-repeat hsl(8, 36%, 20%);*/
+}
+
+.langs {
+	position: absolute;
+	right: 15px;
+	bottom: 8px;
+	transition: 0.3s;
+}
+
+.lang {
+	display: inline-block;
+	padding: 5px 2px 4px 15px;
+	font-weight: 600;
+	font-size: 15px;
+}
+
+.lang-off {
+	font-weight: 400;
+	/*opacity: .9;*/
+	/*color: rgb(128,128,128);*/
+	transition: 0.3s;
+}
+
+.lang-off:hover {
+	transform: scale(1.2);
+}
+
+/*.lang_off:hover {
+	font-weight: 700;
+	text-shadow: 0 0 26px rgb(166,240,206);
+}*/
+
+.logo {
+	position: absolute;
+	/*top: 124px;*/
+	bottom: 16px;
+	left: 14px;
+	/*width: 35px;
+	height: 35px;
+	opacity: .6;*/
+	transition: 0.3s;
+}
+
+@media (min-width: 576px) {
+	.logo {
+		left: 40px;
+	}
+}
+
+.logo svg {
+	width: 35px;
+	height: 35px;
+	/*opacity: .6;*/
+	transition: 0.3s;
+	stroke: var(--color-main-light);
+}
+
+@media (min-width: 1024px) {
+	.logo svg {
+		width: 45px;
+		height: 45px;
+	}
+}
+
+.logo:hover {
+	transform: scale(1.1);
+	opacity: 1;
+	transition: 0.4s;
+}
+
+.scroll {
+	/*position: relative; это для позиционирования псевдоэлементов "забеления" по краям */
+	overflow: auto;
+}/* это для горизонтального скролла блока на мобилках */
+
+/*.scroll::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	z-index: 6;
+	display: block;
+	height: 100%;было 73px
+	width: 46px;
+	background: linear-gradient(to right, var(--bg) 30%, transparent 100%);
+} это для градиента-размытия для горизонтального скролла слева */
+
+/*.scroll::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 6;
+	display: block;
+	height: 100%;было 73px
+	width: 46px;
+	background: linear-gradient(to left, var(--bg) 30%, transparent 100%);
+} это для градиента-размытия для горизонтального скролла справа */
+
+.menu {
+	display: flex;
+	justify-content: space-between;/* space-between space-around space-evenly */
+	/*margin-right: 15px;
+	margin-left: 15px;*/
+	/*padding: 0 15px;*/
+	min-width: 640px;
+}
+
+.menu-link {
+	/*display: block;  непонятно надо или нет, это было в бутстрапе */
+	padding: 18px 5px 10px;
+	font: 500 19px/1.5 var(--font-family-heading);
+	white-space: nowrap;
+	color: hsl(0, 0%, 26%);
+	transition: 0.4s 0.2s;
+}
+
+.menu-link:hover,
+.menu-link:focus {
+	/*background-color: rgb(190,190,190); */
+	text-shadow: 0 0 1.2em hsl(152, 100%, 50%);
+	/*var(--color-main-dark) */
+	/*outline: none !important; */
+	transition: 0.4s;
+}
+
+/*.menu-symbol {
+	padding: 17px 0;
+	font-size: 26px;
+	color: rgb(100,100,100);
+} думаю это неправильно семантически использовать html-элемент для этого разделителя, надо поменять на :before или типа того */
+
+/*.menu-link:not(:last-child)::after {
+	content: ' | ';
+}*/
+
+/*.menu-link::after {
+	content: "|";
+	font-size: 26px;
+	color: rgb(100,100,100);
+	display: block;  хз надо или нет
+}
+a:last-child .menu-link::after {
+	content: none;
+} это чтобы убрать последнюю черту
+.menu-link:before {
+	content: '';
+	display: block;
+	height: 1px;
+	background: green;
+}*/
+
+
+
+
+/*main {
+	padding-top: 40px;
+}*/
+
+section {
+	margin-bottom: 48px;
+	padding: 48px 0 56px;
+}
+
+.audiobutton {
+	height: 200px;
+	cursor: pointer;
+	filter: drop-shadow(16px 4px 5px hsla(128, 67%, 13%, 0.1))
+		drop-shadow(24px 5px 22px hsla(128, 67%, 13%, 0.2));
+}
+
+.audio-wrap {
+	margin-bottom: 40px;
+}
+
+@media (min-width: 576px) {
+	.audio-wrap {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;/* это вроде для блока текста о ключах p class="lets-play" */
+	}
+}
+
+.audio-box {
+	/*margin: 0 60px 40px 20px; это для блока текста про ключи */
+	text-align: center;
+}
+
+audio {
+	/*width: 500px; */
+	/*background: var(--color-main-light);*/
+	border: 3px solid var(--color-main);
+	border-radius: 40px;
+}
+
+/*.lets-play {
+	padding: 8px;
+	margin: 40px;
+	font-size: var(--font-size-xs);
+	background: rgb(190,240,190);
+}*/
+
+/*.keys {
+	position: relative;  это для привязки ключа-1
+}
+
+.key-1 {
+	display: none;
+	position: absolute;
+	top: 0px;
+	left: -40px;
+	padding: 4px;
+	border: 2px solid rgb(33,33,33);
+	border-radius: 50%;
+} это спрятанный ключ-1
+
+.key-1:hover {
+	text-shadow: 0 0 40px rgb(50,200,50);
+	transition: .4s;
+}*/
+
+.color-line {
+	padding: 0 10px;/* это чтобы полоса выступала в начале и в конце текста */
+	/*background: linear-gradient(to bottom, transparent 58%, var(--color-main-light) 42%); этот способ создания полосы был раньше */
+	box-shadow: inset 0 -0.5em 0 0 var(--color-main-light);
+}
+
+@media (min-width: 576px) {
+	.columns {
+		columns: 2 288px;
+		column-gap: 44px;
+		column-rule: 1px solid var(--grey-light);
+	}
+}
+
+.columns li {
+	margin-bottom: 10px;
+}
+
+kbd:not([class]) {
+	/*display: inline-block;*/
+	margin: 0 0.15em;/* можно задать в пикселях?! */
+	padding: 0 0.3em;/* padding: 2px 6px; */
+	font-weight: 600;
+	font-family: var(--font-family-mono);
+	background: var(--color-main-light);
+	/*letter-spacing: -0.5px;*/
+	/*border: 1px solid rgba(0,0,0,.1);  или var(--grey-light), лучше серым цветом или синим как фон? Сейчас сделал эту рамку с помощью box-shadow inset */
+	border-radius: 0.3em;/* лучше делать сплошным цветом или полупрозрачным? */
+	box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.1);/* это свойство делает фон "клавиш" меньше, чем при использовании border */
+	/*white-space: pre-wrap; пока не вижу нужды в этой настройке */
+	/*hyphens: none; пока не вижу нужды в этой настройке */
+	/*tab-size: 3; пока не вижу нужды в этой настройке */
+	/*text-align: left; и word-spacing: normal; пока не вижу нужды в этой настройке */
+}
+
+
+
+/* Ниже таблица с кодовыми символами KS: */
+
+table {
+	width: 100%;
+	min-width: 400px;
+	font: 400 var(--font-size-s)/var(--line-height-s, 1.35) var(--font-family);
+	/*border: 4px solid rgb(190,190,190);*/
+	table-layout: fixed;
+	background: var(--bg);
+	border-collapse: collapse;/* это для одинаковой ширины колонок, не уверен что обязательно */
+}
+
+caption {
+	margin: 19px 0 10px;
+	font: 700 var(--font-size-m)/1 var(--font-family);
+	text-align: left;
+	color: hsl(0, 0%, 26%);
+}
+
+th,
+td {
+	height: 32px;
+	padding: 4px;
+	overflow: hidden;
+	text-align: center;
+	vertical-align: middle;
+	border: 3px solid var(--grey-light);/* высота не изменяется при маленьких размерах, видать контент её сдерживает */
+}
+
+th {
+	font-weight: 500;
+	/*width: 100%; нужно или нет? */
+	color: hsl(0, 0%, 100%);
+	background: var(--grey);/* нужно или нет? */
+}
+
+td:hover,
+.table2 tr:hover {
+	background: var(--grey-lightest);
+}
+
+table img {
+	display: inline-block;/* это чтобы картинки выравнивались по горизонтали в таблицах */
+	margin-bottom: -6px;/* это чтобы убрать-компенсировать непонятный отступ снизу */
+}
+
+.table img {
+	width: 64px;
+	height: 64px;
+}
+
+.table2 img {
+	width: 30px;
+	height: 30px;
+}
+
+
+/* Ниже таблица с избранными уровнями KS ".table2" */
+
+.col1,
+.col2 {
+	width: 38px;
+}
+
+.col3 {
+	width: 224px;
+}
+
+.col4 {
+	width: 304px;
+}
+
+.col5-7 {
+	width: 112px;
+}
+
+/*.user-icon {
+	width: 32px;
+	height: 32px;
+} нужно ещё выравнять картинку по центру по горизонтали */
+
+/* ниже пытаюсь выделить строку при клике по ней
+"Используем простейший способ с CSS-классом active и toggle по клику.
+Работает как часы, работает везде, понятно всем, отлично отлаживается,
+можно легко выбрать какие элементы активные и не думать и гадать,
+а сработает ли это у пользователя, семантически верно." */
+
+/*.levels tr:focus {
+	background: rgb(194,248,223);
+} к этому нужно ещё добавить tabindex и возможно яваскрипт
+но может просто нужно к каждой игре дать ссылку (на скачивание?) и фокус по строке заработает?! */
+
+
+
+
+/* Ниже компонент Спойлер (раскрывающийся контент) */
+
+.spoiler {
+	/*margin-bottom: 40px;*/
+	border-bottom: 1px solid var(--grey-light);/* надо попробовать border-top: */
+	/*background-color: rgb(153, 229, 226);  временная тестовая строка */
+}
+
+.spoiler:first-of-type {
+	border-top: 1px solid var(--grey-light);
+}
+
+.spoiler-summary {
+	position: relative;/* это для позиционирования .spoiler-summary::after */
+	display: block;/* или list-style-type: none; это новые свойства для удаления иконки-треугольника у раскрывающегося списка */
+	padding: 13px 38px 13px 13px;/* 50px это отступ для значка-стрелки */
+	font: 500 var(--font-size-l)/var(--line-height-s, 1.35) var(--font-family);
+	outline: none;/* чтобы убрать обводку когда спойлер открыт */
+	/*border-bottom: 1px solid var(--grey-light); эта полоса сейчас задана для <details class="faq"> */
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.spoiler-summary::after {
+	content: '∟';/* или content: "✕"; */
+	position: absolute;
+	top: 13px;
+	right: 14px;
+	transform: rotate(-45deg);
+	transition: 0.5s;
+}/* это значок-стрелка для спойлера. Желательно расположить его так, чтобы он находился посередине первой строки заголовка спойлера и не приходилось подстраивать значение top под изменения заголовка. */
+
+/* Нужно попробовать другие формы-виды этого значка, сейчас мало возможностей его настройки (не реагирует на изменения жирности шрифта) и код сложноват. Например нарисовать его бордерами псевдоэлемента, или поискать другие значки в шрифте и т.п. */
+
+details[open] .spoiler-summary::after {
+	transform: rotate(135deg);
+	transition: 0.6s;
+}/* это анимация разворота стрелки при раскрытии спойлера */
+
+.spoiler-summary:hover,
+.spoiler-summary:focus {
+	background-color: var(--grey-lightest);
+	transition: 0.3s;
+}
+
+.spoiler-content {
+	padding: 10px 13px 13px;
+}
+
+.spoiler-content > * {
+	margin-top: 0;
+	margin-right: 0;
+	margin-left: 0;
+}/* это экспериментальные настройки, нужно подобрать такой код чтобы в контент спойлера можно было просто добавлять p, ul, img и они выглядели хорошо без дополнительных настроек */
+
+.disclaimer {
+	max-width: 680px;
+	margin: 29px 0;
+	padding: 8px 13px;
+	font: 500 var(--font-size-s)/1.5 var(--font-family);
+	color: hsl(0, 91%, 36%);
+	border: 2px solid hsl(0, 91%, 36%);
+}
+
+@media (min-width: 1024px) {
+	.disclaimer {
+		margin: 30px auto;
+		font-size: var(--font-size-m);
+	}
+}
+
+.top {
+	display: block;
+	height: 64px;
+	background: url('/img/exp/knytt/Object2.png') 50%/contain no-repeat;
+}
+
+/*.to-top {
+	display: block;
+	text-align: right;
+} потом можно сделать через position: absolute;
+
+.to-top::after {
+	content: "↑";
+	padding-left: 10px;
+	font: 900 34px/0.1 var(--font-family-heading);
+} */
+
+/* Футер (footer) */
+
+.footer {
+	display: flex;/* может не нужно */
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 13px;
+	/*height: 200px;*/
+	padding-top: 18px;
+	padding-bottom: 18px;
+	background: var(--grey-lightest);
+}
+
+.footer-link {
+	padding: 19px 0;
+	font: 500 var(--font-size-s)/var(--line-height-s, 1.35) var(--font-family);
+	color: var(--grey-dark);
+}/* можно избавиться от этого класса? */
+
+.footer-link:hover,
+.footer-link:focus {
+	text-decoration: underline;
+}
+
+
+
+
+/* Код для визуально-скрытых (vh = visually-hidden) элементов html и vhf = visually-hidden-focusable: */
+
+/*Более современный селектор: .visually-hidden:not(:focus):not(:active) - Это гарантирует, что если интерактивный элемент получит фокус, стили файла .visually-hidden класс будет отменен, а доступное для фокуса содержимое будет выставлено.*/
+
+.vh,
+.vhf:not(:focus):not(:focus-within) {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	border: 0;
+	-webkit-appearance: none;
+	appearance: none;
+	clip: rect(0 0 0 0);
+	-webkit-clip-path: inset(100%);
+	clip-path: inset(100%);/*clip: rect(1px, 1px, 1px, 1px);*//*clip-path: inset(0px 0px 99.9% 99.9%);*/
+}
+
+
+
+/* Ниже полное отключение анимаций на сайте если включена настройка prefers-reduced-motion: reduce: */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::after,
+	*::before {
+		/*transition: none !important;*/
+		/*animation: none !important;*/
+		animation-duration: 0.01s !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01s !important;
+		scroll-behavior: auto !important;
+	}
+}
