@@ -366,7 +366,7 @@ dd {
 }
 
 .scroll {
-	/*position: relative; это для позиционирования псевдоэлементов "забеления" по краям */
+	position: relative;/* это для позиционирования псевдоэлементов "забеления" по краям */
 	overflow: auto;
 }/* это для горизонтального скролла блока на мобилках */
 
@@ -383,7 +383,7 @@ dd {
 	background: linear-gradient(to right, var(--bg) 30%, transparent 100%);
 } это для градиента-размытия для горизонтального скролла слева */
 
-/*.scroll::after {
+.scroll::after {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -394,7 +394,7 @@ dd {
 	height: 100%;было 73px
 	width: 46px;
 	background: linear-gradient(to left, var(--bg) 30%, transparent 100%);
-} это для градиента-размытия для горизонтального скролла справа */
+}/* это для градиента-размытия для горизонтального скролла справа */
 
 .menu {
 	display: flex;
