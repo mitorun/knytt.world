@@ -391,7 +391,7 @@ dd {
 	bottom: 0;
 	z-index: 6;
 	display: block;
-	height: 100%;было 73px
+	height: 100%;/*было 73px*/
 	width: 46px;
 	background: linear-gradient(to left, var(--bg) 30%, transparent 100%);
 }/* это для градиента-размытия для горизонтального скролла справа */
